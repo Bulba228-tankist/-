@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jungle World — Горизонтальна Експедиція</title>
+    <style>
+        :root {
+            --jungle-dark: #0f2012;
+            --jungle-green: #143d22;
+            --leaf-light: #3b7a4a;
+            --accent-gold: #e5ad24;
+            --sand-light: #f1f6f0;
+            --wood-brown: #4a2f13;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--jungle-dark);
+            scroll-behavior: smooth;
+        }
+
+        nav {
+            background-color: var(--jungle-green);
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 4px solid var(--accent-gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        nav a {
+            color: white;
+            padding: 18px 25px;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            background-color: var(--leaf-light);
+            color: var(--accent-gold);
+        }
+
+        .wrapper {
+            display: flex;
+            width: 500vw;
+            height: 100vh;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        section {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            padding: 100px 40px 40px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            overflow-y: auto;
+            color: var(--jungle-dark);
+        }
+
+        #home {
+            background: linear-gradient(rgba(15, 32, 18, 0.7), rgba(15, 32, 18, 0.8)), 
+                        url('https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            color: #ffffff;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #home h1 {
+            font-size: 4rem;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            text-shadow: 3px 3px 8px rgba(0,0,0,0.8);
+        }
+
+        #home p {
+            color: #ffffff;
+            font-size: 1.6rem;
+            max-width: 750px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+        }
+
+        #tours { background-color: var(--sand-light); }
+        #wiki { background-color: #e3ebe2; }
+        #login { background-color: var(--sand-light); }
+        #comments { background-color: #e8efe7; }
+
+        .section-content {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 6px solid var(--jungle-green);
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: var(--jungle-green);
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+            color: #333;
+        }
+
+        .highlight-box {
+            background-color: #f9fdf9;
+            border-left: 4px solid var(--accent-gold);
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        .tours-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .tour-card {
+            background: var(--sand-light);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+
+        .tour-card:hover { transform: translateY(-5px); }
+        .tour-img { height: 160px; background-size: cover; background-position: center; }
+        .tour-info { padding: 20px; }
+        .tour-info h3 { color: var(--wood-brown); margin-bottom: 8px; }
+        .tour-price { color: var(--leaf-light); font-weight: bold; margin-top: 10px; font-size: 1.1rem; }
+
+        .wiki-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .wiki-links a {
+            display: block;
+            background: var(--sand-light);
+            color: var(--jungle-dark);
+            padding: 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border-left: 4px solid var(--leaf-light);
+            transition: 0.2s;
+        }
+
+        .wiki-links a:hover {
+            background: var(--jungle-green);
+            color: white;
+            padding-left: 20px;
+        }
+
+        form { display: flex; flex-direction: column; gap: 15px; max-width: 500px; width: 100%; margin-top: 20px; }
+        input, textarea { padding: 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
+        button {
+            background-color: var(--jungle-green); color: white; padding: 14px;
+            border: none; border-radius: 8px; font-size: 1rem; font-weight: bold;
+            cursor: pointer; transition: 0.3s;
+        }
+        button:hover { background-color: var(--leaf-light); }
+
+        .comments-list { margin-top: 20px; background: var(--sand-light); padding: 20px; border-radius: 8px; }
+        .comment-item { background: white; padding: 12px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .comment-author { font-weight: bold; color: var(--jungle-green); margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#home">Головна</a>
+        <a href="#tours">Туризм</a>
+        <a href="#wiki">Енциклопедія</a>
+        <a href="#login">Особистий Кабінет</a>
+        <a href="#comments">Відгуки</a>
+    </nav>
+
+    <div class="wrapper">
+
+        <section id="home">
+            <h1>Jungle World</h1>
+            <p>Ласкаво просимо до найбільшої онлайн-платформи про дикі тропічні ліси нашої планети.</p>
+        </section>
+
+        <section id="tours">
+            <div class="section-content">
+                <h2>Експедиційний та Екологічний Туризм</h2>
+                <p>Тропічні джунглі займають лише близько 6% поверхні Землі, проте вони є домом для більш ніж половини всіх живих видів планети. Наш туристичний відділ пропонує унікальну можливість побачити цей дивосвіт на власні очі без шкоди для екосистеми.</p>
+                
+                <div class="highlight-box">
+                    Важливо: Усі наші маршрути сертифіковані міжнародними організаціями захисту дикої природи. 10% від вартості кожного туру йде на висадку нових дерев та боротьбу з браконьєрством.
+                </div>
+
+                <p>Ми пропонуємо три рівні складності: від комфортних еко-лоджів з басейнами посеред лісу до справжніх експедицій на виживання, де вам доведеться будувати укриття та шукать питну воду під керівництвом досвідчених рейнджерів.</p>
+                
+                <div class="tours-grid">
+                    <div class="tour-card">
+                        <div class="tour-img" style="background-image: url('https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=400&q=80');"></div>
+                        <div class="tour-info">
+                            <h3>Дика Амазонка</h3>
+                            <p>Сплав на каное, нічне полювання на кайманів та глибокий трекінг через ліси Бразилії.</p>
+                            <div class="tour-price">$1,200 / 7 днів</div>
+                        </div>
+                    </div>
+                    <div class="tour-card">
+                        <div class="tour-img" style="background-image: url('https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?auto=format&fit=crop&w=400&q=80');"></div>
+                        <div class="tour-info">
+                            <h3>Загублений світ Борнео</h3>
+                            <p>Унікальний шанс побачити диких орангутанів, карликових слонів та гігантські квітки рафлезії.</p>
+                            <div class="tour-price">$1,450 / 9 днів</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="wiki">
+            <div class="section-content">
+                <h2>Інформаційне бюро та Енциклопедія</h2>
+                <p>Бажаєте дізнатися, чому дощові ліси називають "легенями планети" або як виживають корінні племена без сучасних технологій? Ми зібрали для вас найкращі наукові та освітні ресурси з вільної світової енциклопедії Wikipedia.</p>
+                
+                <p>Джунглі — це багатошарові надскладні системи. Верхній ярус (емерджентний) піднімається на висоту до 70 метрів, де панують орли та кажани, тоді як підлісок майже ніколи не бачить сонячного світла, створюючи ідеальні умови для мохів, комах та дивовижних грибів, що світяться в темряві.</p>
+
+                <div class="wiki-links">
+                    <a href="https://uk.wikipedia.org/wiki/Тропічний_ліс" target="_blank">🌳 Тропічний дощовий ліс — Загальний огляд, клімат та кліматичні зони</a>
+                    <a href="https://uk.wikipedia.org/wiki/Амазонський_дощовий_ліс" target="_blank">🌊 Сельва Амазонки — Найбільший тропічний лісовий масив у світі</a>
+                    <a href="https://uk.wikipedia.org/wiki/Ягуар" target="_blank">🐆 Ягуар — Суперхижак американських джунглів та його спосіб життя</a>
+                    <a href="https://uk.wikipedia.org/wiki/Біорізноманіття" target="_blank">🌱 Проблема збереження біорізноманіття та глобальне потепління</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="login">
+            <div class="section-content">
+                <h2>Особистий Кабінет Дослідника</h2>
+                <p>Реєстрація дозволяє вам вести власний щоденник спостережень, накопичувати бонуси на майбутні мандрівки та спілкуватися з іншими натуралістами клубу в закритому чаті.</p>
+                
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <input type="text" id="username" placeholder="Введіть ваш Email або ID члена клубу" required>
+                    <input type="password" id="password" placeholder="Пароль доступу" required>
+                    <button type="submit">Увійти в систему</button>
+                </form>
+                <p id="loginMessage" style="margin-top: 15px; color: var(--leaf-light); font-weight: bold;"></p>
+            </div>
+        </section>
+
+        <section id="comments">
+            <div class="section-content">
+                <h2>Багаття відгуків та коментарів</h2>
+                <p>Тут мандрівники діляться своїм живим досвідом зустрічі з дикою природою. Напишіть і ви свої думки!</p>
+                
+                <form id="commentForm" onsubmit="addComment(event)">
+                    <input type="text" id="authorName" placeholder="Ваше ім'я або нікнейм" required>
+                    <textarea id="commentText" rows="3" placeholder="Напишіть ваш відгук чи запитання..." required></textarea>
+                    <button type="submit">Надіслати коментар</button>
+                </form>
+
+                <div class="comments-list" id="commentsList">
+                    <div class="comment-item">
+                        <div class="comment-author">Максим, Полтава</div>
+                        <div>Був на Борнео минулого року. Це повністю змінює світогляд. Коли за три метри від тебе сидить орангутан і дивиться прямо в очі — це незабутньо. Сайт супер, зручно читати!</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            document.getElementById('loginMessage').innerText = `Вітаємо у таборі, ${username}! Доступ до секретних карт відкрито.`;
+            document.getElementById('loginForm').reset();
+        }
+
+        function addComment(event) {
+            event.preventDefault();
+            const name = document.getElementById('authorName').value;
+            const text = document.getElementById('commentText').value;
+            const list = document.getElementById('commentsList');
+
+            const commentItem = document.createElement('div');
+            commentItem.className = 'comment-item';
+            
+            const commentAuthor = document.createElement('div');
+            commentAuthor.className = 'comment-author';
+            commentAuthor.innerText = name;
+
+            const commentContent = document.createElement('div');
+            commentContent.innerText = text;
+
+            commentItem.appendChild(commentAuthor);
+            commentItem.appendChild(commentContent);
+
+            list.insertBefore(commentItem, list.firstChild);
+            document.getElementById('commentForm').reset();
+        }
+    </script>
+</body>
+</html>
