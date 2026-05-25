@@ -1,3 +1,4 @@
+HTML
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -96,9 +97,22 @@
         #home h1 {
             font-size: 4rem;
             color: var(--accent-gold);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             text-transform: uppercase;
             text-shadow: 3px 3px 8px rgba(0,0,0,0.8);
+        }
+
+        .author-badge {
+            color: #ffffff;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.9);
+        }
+
+        .author-badge span {
+            color: var(--accent-gold);
+            font-weight: bold;
         }
 
         #home p {
@@ -218,19 +232,20 @@
 
         <section id="home">
             <h1>Jungle World</h1>
+            <div class="author-badge">Зроблено учнем 11-Б класу, <span>Віталієм Кандибою</span></div>
             <p>Ласкаво просимо до найбільшої онлайн-платформи про дикі тропічні ліси нашої планети.</p>
         </section>
 
         <section id="tours">
             <div class="section-content">
                 <h2>Експедиційний та Екологічний Туризм</h2>
-                <p>Тропічні джунглі займають лише близько 6% поверхні Землі, проте вони є домом для більш ніж половини всіх живих видів планети. Наш туристичний відділ пропонує унікальну можливість побачити цей дивосвіт на власні очі без шкоди для екосистеми.</p>
+                <p>Тропічні джунглі займають лише близько 6% поверхности Землі, проте вони є домом для більш ніж половини всіх живих видів планети. Наш туристичний відділ пропонує унікальну можливість побачити цей дивосвіт на власні очі без шкоди для екосистеми.</p>
                 
                 <div class="highlight-box">
                     Важливо: Усі наші маршрути сертифіковані міжнародними організаціями захисту дикої природи. 10% від вартості кожного туру йде на висадку нових дерев та боротьбу з браконьєрством.
                 </div>
 
-                <p>Ми пропонуємо три рівні складності: від комфортних еко-лоджів з басейнами посеред лісу до справжніх експедицій на виживання, де вам доведеться будувати укриття та шукать питну воду під керівництвом досвідчених рейнджерів.</p>
+                <p>Ми пропонуємо три рівні складності: від комфортних еко-лоджів з басейнами посеред лісу до справжніх експедицій на виживання, де вам доведеться будувати укриття та шукати питну воду під керівництвом досвідчених рейнджерів.</p>
                 
                 <div class="tours-grid">
                     <div class="tour-card">
@@ -258,7 +273,7 @@
                 <h2>Інформаційне бюро та Енциклопедія</h2>
                 <p>Бажаєте дізнатися, чому дощові ліси називають "легенями планети" або як виживають корінні племена без сучасних технологій? Ми зібрали для вас найкращі наукові та освітні ресурси з вільної світової енциклопедії Wikipedia.</p>
                 
-                <p>Джунглі — це багатошарові надскладні системи. Верхній ярус (емерджентний) піднімається на висоту до 70 метрів, де панують орли та кажани, тоді як підлісок майже ніколи не бачить сонячного світла, створюючи ідеальні умови для мохів, комах та дивовижних грибів, що світяться в темряві.</p>
+                <p>Джунглі — це багатошарові надскладні системи. Верхній ярус (емерджентний) піднімається на высоту до 70 метрів, де панують орли та кажани, тоді як підлісок майже ніколи не бачить сонячного світла, створюючи ідеальні умови для мохів, комах та дивовижних грибів, що світяться в темряві.</p>
 
                 <div class="wiki-links">
                     <a href="https://uk.wikipedia.org/wiki/Тропічний_ліс" target="_blank">🌳 Тропічний дощовий ліс — Загальний огляд, клімат та кліматичні зони</a>
@@ -294,12 +309,7 @@
                     <button type="submit">Надіслати коментар</button>
                 </form>
 
-                <div class="comments-list" id="commentsList">
-                    <div class="comment-item">
-                        <div class="comment-author">Максим, Полтава</div>
-                        <div>Був на Борнео минулого року. Це повністю змінює світогляд. Коли за три метри від тебе сидить орангутан і дивиться прямо в очі — це незабутньо. Сайт супер, зручно читати!</div>
-                    </div>
-                </div>
+                <div class="comments-list" id="commentsList"></div>
             </div>
         </section>
 
@@ -313,28 +323,48 @@
             document.getElementById('loginForm').reset();
         }
 
+        function loadComments() {
+            const list = document.getElementById('commentsList');
+            list.innerHTML = '';
+            
+            let comments = JSON.parse(localStorage.getItem('jungle_comments')) || [
+                { name: "Максим, Полтава", text: "Був на Борнео минулого року. Це повністю змінює світогляд. Коли за три метри від тебе сидить орангутан і дивиться прямо в очі — це незабутньо. Сайт супер, зручно читати!" }
+            ];
+
+            comments.forEach(comment => {
+                const commentItem = document.createElement('div');
+                commentItem.className = 'comment-item';
+                
+                const commentAuthor = document.createElement('div');
+                commentAuthor.className = 'comment-author';
+                commentAuthor.innerText = comment.name;
+
+                const commentContent = document.createElement('div');
+                commentContent.innerText = comment.text;
+
+                commentItem.appendChild(commentAuthor);
+                commentItem.appendChild(commentContent);
+                list.appendChild(commentItem);
+            });
+        }
+
         function addComment(event) {
             event.preventDefault();
             const name = document.getElementById('authorName').value;
             const text = document.getElementById('commentText').value;
-            const list = document.getElementById('commentsList');
 
-            const commentItem = document.createElement('div');
-            commentItem.className = 'comment-item';
-            
-            const commentAuthor = document.createElement('div');
-            commentAuthor.className = 'comment-author';
-            commentAuthor.innerText = name;
+            let comments = JSON.parse(localStorage.getItem('jungle_comments')) || [
+                { name: "Максим, Полтава", text: "Був на Борнео минулого року. Це повністю змінює світогляд. Коли за три метри від тебе сидить орангутан і дивиться прямо в очі — це незабутньо. Сайт супер, зручно читати!" }
+            ];
 
-            const commentContent = document.createElement('div');
-            commentContent.innerText = text;
+            comments.unshift({ name: name, text: text });
+            localStorage.setItem('jungle_comments', JSON.stringify(comments));
 
-            commentItem.appendChild(commentAuthor);
-            commentItem.appendChild(commentContent);
-
-            list.insertBefore(commentItem, list.firstChild);
+            loadComments();
             document.getElementById('commentForm').reset();
         }
+
+        window.onload = loadComments;
     </script>
 </body>
 </html>
